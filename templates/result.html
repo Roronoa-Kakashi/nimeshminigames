@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Game Over</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        video {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            text-align: center;
+            color: white;
+        }
+
+        .overlay button {
+            padding: 12px 25px;
+            font-size: 18px;
+            margin-top: 20px;
+            cursor: pointer;
+            border: 2px solid #00FF00;
+            background: black;
+            color: #00FF00;
+            font-family: 'Courier New', monospace;
+            transition: 0.3s;
+        }
+
+        .overlay button:hover {
+            background: #00FF00;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    {% if status == 'win' %}
+        <video autoplay muted>
+            <source src="{{ url_for('static', filename='win.mp4') }}" type="video/mp4">
+        </video>
+    {% else %}
+        <video autoplay muted>
+            <source src="{{ url_for('static', filename='lose.mp4') }}" type="video/mp4">
+        </video>
+    {% endif %}
+
+    <div class="overlay">
+        <h1>{{ status.upper() }}!</h1>
+        <p>Press ENTER to Play Again</p>
+
+        <!-- Back to Menu Button -->
+        <form action="{{ url_for('choose') }}">
+            <button type="submit">Back to Menu</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Enter") {
+                window.location.href = "/";
+            }
+        });
+        localStorage.removeItem("music");
+    </script>
+</body>
+</html>

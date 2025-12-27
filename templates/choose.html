@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Choose Your Game</title>
+<style>
+    /* Fullscreen gradient background */
+    body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        background-size: 400% 400%;
+        animation: gradientAnimation 15s ease infinite;
+        color: #fff;
+    }
+
+    /* Animate gradient */
+    @keyframes gradientAnimation {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* Main panel */
+    .panel {
+        background-color: rgba(0, 0, 0, 0.7); /* semi-transparent black */
+        border-radius: 20px;
+        padding: 50px 60px;
+        text-align: center;
+        box-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+    }
+
+    h1 {
+        font-size: 38px;
+        margin-bottom: 20px;
+        color: #fff;
+        text-shadow: 0 0 10px #fff, 0 0 20px #6a11cb, 0 0 30px #2575fc;
+    }
+
+    p {
+        font-size: 18px;
+        margin-bottom: 30px;
+        color: #eee;
+    }
+
+    /* Option buttons */
+    .option-btn {
+        display: inline-block;
+        margin: 12px;
+        padding: 15px 35px;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 12px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        color: #fff;
+        background: linear-gradient(135deg, #ff7e5f, #feb47b);
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .option-btn:hover {
+        background: linear-gradient(135deg, #43cea2, #185a9d);
+        color: #fff;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    }
+
+    /* Footer hint */
+    .footer {
+        margin-top: 25px;
+        font-size: 14px;
+        color: #ddd;
+    }
+</style>
+</head>
+<body>
+
+<div class="panel">
+    <h1>🎮 CHOOSE YOUR GAME</h1>
+    <p>Select an option to start playing:</p>
+
+    <form method="POST">
+        <button type="submit" name="option" value="1" class="option-btn">Option 1 – Riddles</button>
+        <button type="submit" name="option" value="2" class="option-btn">Option 2 – Tic-Tac-Toe</button>
+    </form>
+
+    <div class="footer">
+        Your session will start fresh every time you choose an option.
+    </div>
+</div>
+
+</body>
+</html>

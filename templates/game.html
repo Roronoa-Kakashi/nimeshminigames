@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mystery Puzzle</title>
+    <style>
+        body {
+            background-color: #111 !important;
+            color: #00FF00 !important; /* Neon green for visibility */
+            font-family: 'Courier New', monospace;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            border: 2px solid #00FF00;
+            padding: 40px;
+            text-align: center;
+            width: 80%;
+        }
+        input {
+            background: #222;
+            border: 1px solid #00FF00;
+            color: white;
+            padding: 10px;
+            font-size: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body><audio id="bgm" src="{{ url_for('static', filename='background.mp3') }}" loop></audio>
+
+    <div class="container">
+        <h1>{{ progress }}</h1>
+        <hr>
+        <p style="font-size: 24px;">{{ riddle }}</p>
+        
+        <form action="/game" method="POST">
+            <input type="text" name="answer" autofocus placeholder="Type here..." autocomplete="off">
+            <p><small>Press Enter to submit</small></p>
+        </form>
+      <button id="hintBtn" onclick="showHint()">💡 GET HINT</button>
+
+<div id="hintBox" style="
+    display:none;
+    margin-top:15px;
+    padding:15px;
+    border:1px solid yellow;
+    font-size:22px;
+    color:yellow;
+">
+    {{ hint }}
+</div>
+
+
+    </div>
+    <script>
+const bgm = document.getElementById("bgm");
+
+if (localStorage.getItem("music") === "on") {
+    bgm.volume = 0.4;
+    bgm.play();
+}
+</script>
+<script>
+function showHint() {
+    const box = document.getElementById("hintBox");
+    const btn = document.getElementById("hintBtn");
+
+    box.style.display = "block";
+    btn.innerText = "HINT SHOWN";
+    btn.disabled = true;
+    btn.style.opacity = 0.6;
+}
+</script>
+
+
+</body>
+</html>

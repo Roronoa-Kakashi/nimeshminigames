@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tic Tac Toe</title>
+<style>
+:root {
+    --bg-start: #6a11cb;
+    --bg-end: #2575fc;
+    --x-color: #ff416c;
+    --o-color: #1fa2ff;
+    --board-bg: rgba(0,0,0,0.7);
+}
+
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
+    background-size: 400% 400%;
+    animation: gradientAnimation 15s ease infinite;
+    color: #fff;
+}
+
+@keyframes gradientAnimation {
+    0% {background-position:0% 50%;}
+    50% {background-position:100% 50%;}
+    100% {background-position:0% 50%;}
+}
+
+.game {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.turn {
+    width: 160px;
+    height: 200px;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    transition: 0.3s;
+    background: var(--board-bg);
+    box-shadow: 0 0 15px rgba(255,255,255,0.2);
+    color: #fff;
+}
+
+.glowX {
+    box-shadow: 0 0 20px var(--x-color);
+    color: var(--x-color);
+}
+.glowO {
+    box-shadow: 0 0 20px var(--o-color);
+    color: var(--o-color);
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    gap: 10px;
+    background: var(--board-bg);
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+.cell {
+    width: 100px;
+    height: 100px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 12px;
+    font-size: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.cell:hover {
+    background: rgba(255,255,255,0.2);
+    transform: scale(1.05);
+}
+
+#message {
+    position: absolute;
+    top: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    color: yellow;
+    text-shadow: 0 0 10px #fff, 0 0 20px yellow;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 20px;
+    cursor: pointer;
+    border: 2px solid #fff;
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    border-radius: 10px;
+    margin-top: 10px;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #fff;
+    color: #000;
+    box-shadow: 0 0 15px #fff;
+}
+</style>
+</head>
+<body>
+<audio id="tttBgm" src="{{ url_for('static', filename='bgm.mp3') }}" loop></audio>
+
+<button id="musicBtn" style="
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px 18px;
+    font-size: 16px;
+    border: 2px solid #fff;
+    border-radius: 10px;
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    cursor: pointer;
+    z-index: 9999;
+">🔊 Music: On</button>
+
+<div id="message"></div>
+
+<div class="game">
+    <div class="turn left glowX" id="leftText">X's Turn</div>
+    <div class="board" id="board"></div>
+    <div class="turn right" id="rightText">O's Turn</div>
+</div>
+
+<!-- Restart & Back to Menu buttons -->
+<div style="position:absolute; bottom:20px; display:flex; gap:15px;">
+    <button id="restartBtn" onclick="restartGame()">Restart Game</button>
+    <button onclick="backToMenu()">Back to Menu</button>
+</div>
+
+<script>
+const board = document.getElementById("board");
+const left = document.getElementById("leftText");
+const right = document.getElementById("rightText");
+const message = document.getElementById("message");
+
+let current, moves, cells;
+
+function initGame() {
+    board.innerHTML = "";
+    cells = [];
+    moves = 0;
+    current = "X";
+    message.textContent = "";
+
+    for(let i=0;i<9;i++){
+        const cell = document.createElement("div");
+        cell.className = "cell";
+        cell.dataset.index = i;
+        cell.onclick = () => play(cell);
+        board.appendChild(cell);
+        cells.push(cell);
+    }
+
+    left.className = "turn left glowX";
+    left.textContent = "X's Turn";
+    right.className = "turn right";
+    right.textContent = "O's Turn";
+}
+
+initGame();
+
+function play(cell){
+    if(cell.textContent !== "" || checkWin() || moves === 9) return;
+
+    cell.textContent = current;
+    moves++;
+
+    if(checkWin()){
+        message.textContent = `${current} Wins!`;
+        return;
+    }
+
+    if(moves === 9){
+        message.textContent = "Draw!";
+        return;
+    }
+
+    switchTurn();
+}
+
+function switchTurn(){
+    if(current === "X"){
+        current = "O";
+        left.classList.remove("glowX");
+        right.classList.add("glowO");
+        left.textContent = "X";
+        right.textContent = "O's Turn";
+    } else {
+        current = "X";
+        right.classList.remove("glowO");
+        left.classList.add("glowX");
+        left.textContent = "X's Turn";
+        right.textContent = "O";
+    }
+}
+
+function checkWin(){
+    const winCombos = [
+        [0,1,2],[3,4,5],[6,7,8],
+        [0,3,6],[1,4,7],[2,5,8],
+        [0,4,8],[2,4,6]
+    ];
+
+    for(const [a,b,c] of winCombos){
+        if(cells[a].textContent && cells[a].textContent === cells[b].textContent && cells[a].textContent === cells[c].textContent){
+            return true;
+        }
+    }
+    return false;
+}
+
+function restartGame(){
+    initGame();
+}
+
+function backToMenu(){
+    window.location.href = "/choose";
+}
+</script><script>
+const tttBgm = document.getElementById("tttBgm");
+const musicBtn = document.getElementById("musicBtn");
+
+let musicPlaying = false;
+
+// Start music on first interaction (first click anywhere)
+document.addEventListener('click', () => {
+    if(!musicPlaying){
+        tttBgm.volume = 0.4;
+        tttBgm.play().catch(err => console.log("Music blocked:", err));
+        musicPlaying = true;
+        musicBtn.innerText = "🔊 Music: On";
+    }
+}, { once: true });
+
+// Toggle button
+musicBtn.addEventListener('click', (e) => {
+    e.stopPropagation(); // prevent first-click listener from firing
+    if(tttBgm.paused){
+        tttBgm.play();
+        musicBtn.innerText = "🔊 Music: On";
+    } else {
+        tttBgm.pause();
+        musicBtn.innerText = "🔇 Music: Off";
+    }
+});
+
+// Optional: stop music when leaving menu
+function backToMenu(){
+    tttBgm.pause();
+    tttBgm.currentTime = 0;
+    window.location.href = "/choose";
+}
+</script>
+
+</body>
+</html>

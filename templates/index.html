@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Mystery Puzzle Game</title>
+
+<style>
+body {
+    background: black;
+    color: #00FF00;
+    font-family: 'Courier New', monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.panel {
+    border: 3px solid #00FF00;
+    padding: 60px;
+    text-align: center;
+    width: 500px;
+    box-shadow: 0 0 20px #00ff00;
+}
+
+h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+button {
+    background: black;
+    color: #00FF00;
+    border: 2px solid #00FF00;
+    padding: 12px 30px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #00FF00;
+    color: black;
+}
+</style>
+</head>
+
+<body>
+<div class="panel">
+    <h1>🧩 MYSTERY PUZZLE</h1>
+    <p>Solve 3 riddles in a row.<br>One mistake and it's over.</p>
+    <br>
+
+    <!-- START GAME button -->
+    <button type="button" onclick="startGame()" style="
+        padding: 12px 25px;
+        font-size: 18px;
+        cursor: pointer;
+        border: 2px solid #00FF00;
+        background: black;
+        color: #00FF00;
+        font-family: 'Courier New', monospace;
+        transition: 0.3s;
+    ">START GAME</button>
+
+    <!-- Back to Menu button -->
+    <button type="button" onclick="backToMenu()" style="
+        margin-top: 20px;
+        padding: 12px 25px;
+        font-size: 18px;
+        cursor: pointer;
+        border: 2px solid #00FF00;
+        background: black;
+        color: #00FF00;
+        font-family: 'Courier New', monospace;
+        transition: 0.3s;
+    ">Back to Menu</button>
+</div>
+
+<audio id="bgm" src="{{ url_for('static', filename='background.mp3') }}" loop></audio>
+
+<script>
+function startGame() {
+    const bgm = document.getElementById("bgm");
+    bgm.volume = 0.4;
+
+    bgm.play().then(() => {
+        localStorage.setItem("music", "on");
+        window.location.href = "/game";
+    }).catch(err => {
+        console.log("Music blocked:", err);
+        window.location.href = "/game";
+    });
+}
+
+function backToMenu() {
+    window.location.href = "/choose";
+}
+</script>
+
+</body>
+</html>
